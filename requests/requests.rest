@@ -1,7 +1,7 @@
 GET http://localhost:3002/api/persons
 
 ###
-DELETE http://localhost:3002/api/persons/3
+DELETE http://localhost:3002/api/persons/4431
 
 ###
 POST http://localhost:3002/api/persons
@@ -11,3 +11,18 @@ Content-Type: application/json
   "name": "Jhon besows",
   "number": "910329012"
 }
+
+###
+GET https://fullstackopencoursepart3.onrender.com/api/persons
+
+###
+POST https://fullstackopencoursepart3.onrender.com/api/persons
+Content-Type: application/json
+
+{
+  "name": "Jhon besow77s",
+  "number": "910329012"
+}
+
+###
+DELETE https://fullstackopencoursepart3.onrender.com/api/persons/3
