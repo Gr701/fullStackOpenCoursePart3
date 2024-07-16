@@ -9,7 +9,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static('dist'))
 
-morgan.token('postData', (request, response) => {
+morgan.token('postData', (request) => {
   if (request.method !== 'POST') {
     return ''
   }
@@ -62,12 +62,12 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const {name, number} = request.body
+  const { name, number } = request.body
 
   Person.findByIdAndUpdate(
-    request.params.id, 
-    {name, number}, 
-    {new: true, runValidators: true, context: 'query'}
+    request.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: 'query' }
   )
     .then(updatedPerson => response.json(updatedPerson))
     .catch(error => next(error))
@@ -75,14 +75,14 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-    .then(person => response.status(204).end())
+    .then(() => response.status(204).end())
     .catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
   if (error.name === 'ValidationError') {
-    return response.status(400).json({error: error.message})
+    return response.status(400).json({ error: error.message })
   }
   next(error)
 }
