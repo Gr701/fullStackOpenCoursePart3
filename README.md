@@ -1,1 +1,1 @@
-https://fullstackopencoursepart3.onrender.com/info
+https://fullstackopencoursepart3.onrender.com
