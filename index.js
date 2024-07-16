@@ -50,25 +50,10 @@ app.get('/info', (request, response) => {
   })
 })
 
-app.delete('/api/persons/:id', (request, response, next) => {
-  Person.findByIdAndDelete(request.params.id)
-    .then(person => response.status(204).end())
-    .catch(error => next(error))
-})
-
 app.post('/api/persons', (request, response, next) => {
-  const body = request.body
-
-  if (!body.name) {
-    return response.status(400).json({error: 'name is missing'})
-  }
-  if(!body.number) {
-    return response.status(400).json({error: 'Number is missing'})
-  }
-
   const person = new Person({
-    name: body.name,
-    number: body.number,
+    name: request.body.name,
+    number: request.body.number,
   })
 
   person.save()
@@ -77,18 +62,28 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const person = {
-    name: request.body.name,
-    number: request.body.number
-  }
+  const {name, number} = request.body
 
-  Person.findByIdAndUpdate(request.params.id, person, {new: true})
+  Person.findByIdAndUpdate(
+    request.params.id, 
+    {name, number}, 
+    {new: true, runValidators: true, context: 'query'}
+  )
     .then(updatedPerson => response.json(updatedPerson))
+    .catch(error => next(error))
+})
+
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndDelete(request.params.id)
+    .then(person => response.status(204).end())
     .catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
+  if (error.name === 'ValidationError') {
+    return response.status(400).json({error: error.message})
+  }
   next(error)
 }
 app.use(errorHandler)
